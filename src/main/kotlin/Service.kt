@@ -25,9 +25,26 @@ object Service {
 
         val zabbixApi = DefaultZabbixApi(properties.url)
         zabbixApi.init()
-
+/*
+        println("logout")
+        val getRequestLogOut2: Request = RequestBuilder.newBuilder()
+            .method("user.logout")
+            .build()
+        val getResponse22: JSONObject = zabbixApi.call(getRequestLogOut2)
+        println(getResponse22)
+*/
         val login: Boolean = zabbixApi.login(properties.user, properties.password)
         println("login:$login")
+
+
+        println("------------------- host.get -------------------------")
+        val getRequestHost: Request = RequestBuilder.newBuilder()
+            .method("host.get").paramEntry("output", "extend")
+            //.paramEntry("graphids","1247")
+            .build()
+        val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)
+        println(org.json.JSONObject(getRequestHost.toString()).toString(2));
+        println(org.json.JSONObject(getResponseHost.toString()).toString(2));
 
 /*
         val host = "Zabbix server"
