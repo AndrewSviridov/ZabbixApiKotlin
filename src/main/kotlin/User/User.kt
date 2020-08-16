@@ -26,8 +26,8 @@ package User
 import Api.ZabbixApiException
 import Api.ZabbixApiMethod
 
-
-class User(apiUrl: String?) : ZabbixApiMethod(apiUrl, null) {
+// todo проверить задумку код сессии в конструкторе
+class User(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
 
     @Throws(ZabbixApiException::class)
     fun login(user: String, password: String, userData: Boolean): String? {
@@ -133,12 +133,13 @@ class User(apiUrl: String?) : ZabbixApiMethod(apiUrl, null) {
         return responseUser
     }
 
+/*
     fun get(params: Map<String, Any>?): UserObject? {
         var method = "user.get"
         return null
     }
 
-    /*
+
     fun create(params:Map<String,Object>?):Sting?{
         var method="user.create"
         return null

@@ -1,7 +1,7 @@
 package Host
 
 
-class HostObject {
+open class HostObject {
     var hostid: Int? = null
     var proxy_hostid: Int? = null
     var host: String? = null
@@ -32,5 +32,16 @@ class HostObject {
     var jmx_errors_from: Int? = null
     var jmx_error: String? = null
     var name: String? = null
+
+    var flags: Int? = null
+    var description: String? = null
+    var tls_connect: Int? = null
+    var tls_accept: Int? = null
+    var tls_issuer: String? = null
+    var tls_subject: String? = null
+    var tls_psk_identity: String? = null
+    var tls_psk: String? = null
+    var inventory_mode: Int? = null
+
 
 }

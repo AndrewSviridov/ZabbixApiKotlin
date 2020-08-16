@@ -2,9 +2,12 @@ package Api
 
 
 import com.fasterxml.jackson.core.JsonGenerationException
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.type.CollectionType
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.apache.http.HttpResponse
 import org.apache.http.HttpStatus
 import org.apache.http.client.methods.HttpPost
@@ -16,7 +19,8 @@ import org.slf4j.LoggerFactory
 
 open class ZabbixApiMethod(protected var apiUrl: String?, protected var auth: String?) {
 
-    var mapper = ObjectMapper()
+    val mapper = ObjectMapper().registerModule(KotlinModule())
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     fun serialize(obj: Any): String {
         var result = ""
@@ -38,6 +42,16 @@ open class ZabbixApiMethod(protected var apiUrl: String?, protected var auth: St
 
         return mapper.readValue(json, obj::class.java)
 
+    }
+
+    // todo сделать try catch
+    fun deserializeToList(json: String, obj: Any): Any? {
+        val javaType: CollectionType = mapper.typeFactory
+            .constructCollectionType(MutableList::class.java, obj::class.java)
+        val asList: Any = mapper.readValue(json, javaType)
+
+
+        return asList
     }
 
 

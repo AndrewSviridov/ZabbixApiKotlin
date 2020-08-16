@@ -2,33 +2,32 @@ package Host
 
 import Api.ZabbixApiException
 import Api.ZabbixApiMethod
-import User.RequestUser
-import User.ResponseUser
 
-class Host(apiUrl: String?) : ZabbixApiMethod(apiUrl, null) {
+
+class Host(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
 
 
     @Throws(ZabbixApiException::class)
-    fun get(user: String, password: String): String? {
-        val requestUser: RequestUser = RequestUser.Builder()
-            .setMethod("host.get")
-            .setUser(user)
-            .setPassword(password)
-            .build()
+    fun get(requestHost: RequestHost): Any? {
 
-        val requestJson = serialize(requestUser)
+        // todo переделать в метод setAuth?
+        requestHost.auth = auth
+        requestHost.method = "host.get"
 
-        var responseUser: String = ""
+        val requestJson = serialize(requestHost)
+
+        var response: Any? = null
         try {
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                responseUser = ResponseUser(it).getResultLoginWithoutUserData()
+                response = ResponseHost(it).getResult()
             }
-
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
-        return responseUser
+
+        return response
+
     }
 
 }

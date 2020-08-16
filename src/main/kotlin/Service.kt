@@ -36,11 +36,15 @@ object Service {
         val login: Boolean = zabbixApi.login(properties.user, properties.password)
         println("login:$login")
 
-
+        val arr2 = JSONArray()
+        arr2[0] = "10084"
+        //arr2[1] = "10333"
+        val arrFields = JSONArray()
+        arrFields[0] = "hostids"
         println("------------------- host.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
             .method("host.get").paramEntry("output", "extend")
-            //.paramEntry("graphids","1247")
+            //.paramEntry("hostids",arr2)
             .build()
         val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)
         println(org.json.JSONObject(getRequestHost.toString()).toString(2));
@@ -83,7 +87,9 @@ object Service {
 
         println("------------------- item.get -------------------------")
         val getRequestItem: Request = RequestBuilder.newBuilder()
-            .method("item.get").paramEntry("output", "extend").paramEntry("itemids", "31398")
+            .method("item.get").paramEntry("output", "extend")
+            .paramEntry("hostids", "10084")
+            //.paramEntry("itemids", "31398")
             //.paramEntry("selectGraphs","extend")
             .build()
         val getResponseItem: JSONObject = zabbixApi.call(getRequestItem)

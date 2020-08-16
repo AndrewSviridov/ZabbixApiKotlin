@@ -1,32 +1,69 @@
 package Api
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.zabbix4j.utils.ZbxListUtils
 
-/**
- * Created by Suguru Yajima on 2014/05/02.
- */
-class GetRequestCommonParams {
+/*
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY, property = "type")
+
+    @JsonSubTypes.Type(value = RequestHost.Params.class, name = "params")
+*/
+@JsonInclude(JsonInclude.Include.NON_NULL)
+open class GetRequestCommonParams() {
+    //   @JsonProperty("countOutput")
     var countOutput: Boolean? = null
+
+    //   @JsonProperty("editable")
     var editable: Boolean? = null
+
+    //   @JsonProperty("excludeSearch")
     var excludeSearch: Boolean? = null
-    private var limit: Int? = null
+
+    // @JsonProperty("limit")
+    //todo подумать че с методами делать
+    var limit: Int? = null
+
+    //  @JsonProperty("nodeids")
     var nodeids: List<Int>? = null
+
+    //   @JsonProperty("output")
     var output = "extend"
+
+    //  @JsonProperty("preservekeys")
     var preservekeys: Boolean? = null
+
+    //  @JsonProperty("search")
     var search: String? = null
+
+    //  @JsonProperty("searchByAny")
     var searchByAny: Boolean? = null
+
+    //   @JsonProperty("searchWildcardsEnabled")
     var searchWildcardsEnabled: Boolean? = null
-    var sortorder: List<SortOrder>? = null
+
+    //   @JsonProperty("sortorder")
+    // var sortorder: List<SortOrder>? = null
+    // @JsonProperty("startSearch")
     var startSearch: String? = null
+
+    // @JsonProperty("limitSelects")
     var limitSelects: Int? = null
+
+    //  @JsonProperty("sortfield")
     var sortfield: List<String>? = null
+
+    //   @JsonProperty("selectConditions")
     var selectConditions: String? = null
+
+    //  @JsonProperty("selectOperations")
     var selectOperations: String? = null
 
-    fun setLimit(limit: Int?) {
-        this.limit = limit
-    }
-
+    //  @JsonSetter("limit")
+    /*  fun setLimit(limit1: Int?) {
+           this.limit1 = limit1
+       }
+   */
     fun addSortField(field: String) {
         sortfield = ZbxListUtils.add(sortfield, field)
     }
@@ -50,14 +87,12 @@ class GetRequestCommonParams {
     fun isExcludeSearch(): Boolean? {
         return excludeSearch
     }
-
+/*
     fun getLimit(): Int {
-        return limit!!
+        return limit1!!
     }
+*/
 
-    fun setLimit(limit: Int) {
-        this.limit = limit
-    }
 
     fun isPreservekeys(): Boolean? {
         return preservekeys
@@ -70,14 +105,16 @@ class GetRequestCommonParams {
     fun isSearchWildcardsEnabled(): Boolean? {
         return searchWildcardsEnabled
     }
-
+/*
     fun setSortOrder(order: SortOrder) {
         sortorder = ZbxListUtils.add(sortorder, order)
     }
 
-    inner class SortOrder private constructor() {
+     class SortOrder private constructor() {
         var sortfield: String? = null
         private val order: String? = null
 
     }
+*/
+
 }
