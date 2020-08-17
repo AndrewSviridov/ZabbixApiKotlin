@@ -5,7 +5,7 @@ import java.util.*
 
 
 class ResponseHistory() : ZabbixApiResponse() {
-    var result: MutableList<ResponseHistory.Result> = ArrayList()
+    var result: MutableList<Result> = ArrayList()
 
     class Result : HistoryObject() {
 

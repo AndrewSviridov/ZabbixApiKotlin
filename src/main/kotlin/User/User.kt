@@ -26,135 +26,87 @@ package User
 import Api.ZabbixApiException
 import Api.ZabbixApiMethod
 
-// todo проверить задумку код сессии в конструкторе
-class User(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
+
+class User(apiUrl: String?, auth: String? = null) : ZabbixApiMethod(apiUrl, auth) {
+
 
     @Throws(ZabbixApiException::class)
-    fun login(user: String, password: String, userData: Boolean): String? {
+    fun login(requestUser: RequestUser): ResponseUser {
 
-        val requestUser: RequestUser = RequestUser.Builder()
-            .setMethod("user.login")
-            .setUser(user)
-            .setPassword(password)
-            .setUserData(userData)
-            .build()
+        val resp = ResponseUser()
+
+        requestUser.method = "user.login"
 
         val requestJson = serialize(requestUser)
 
-        var responseUser: String = ""
         try {
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                responseUser = ResponseUser(it).getResultLoginWithoutUserData()
-            }
-            println()
+                val actualObj = mapper.readTree(responseJson)
+                val jsonNode1 = actualObj["result"]
+                val data = jsonNode1.asText().toString()
+                if (requestUser.params.userData == null || requestUser.params.userData == false) {
+                    val res = ResponseUser.Result()
+                    res.sessionid = data
+                    resp.result.add(res)
+                } else {
+                    resp.result.add(deserialize(data, ResponseUser.Result()) as ResponseUser.Result)
+                }
 
+            }
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
-        // todo сделать возвращение объекта objectUser +-
-        return null
+
+        return resp
     }
 
-    @Throws(ZabbixApiException::class)
-    fun login(user: String, password: String): String? {
-        val requestUser: RequestUser = RequestUser.Builder()
-            .setMethod("user.login")
-            .setUser(user)
-            .setPassword(password)
-            .build()
+    fun logout(): Boolean {
+
+        var resp: Boolean = false
+        val requestUser = RequestUser()
+        requestUser.auth = this.auth
+        requestUser.method = "user.logout"
 
         val requestJson = serialize(requestUser)
 
-        var responseUser: String = ""
         try {
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                responseUser = ResponseUser(it).getResultLoginWithoutUserData()
-            }
+                val actualObj = mapper.readTree(responseJson)
+                val jsonNode1 = actualObj["result"]
+                resp = jsonNode1.asBoolean()
 
+                auth = null
+            }
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
-        return responseUser
+        return resp
     }
 
-    fun logout(auth: String): Boolean? {
-        val requestUser: RequestUser = RequestUser.Builder()
-            .setMethod("user.logout")
-            .setAuth(auth)
-            .build()
-        val requestJson = serialize(requestUser)
+    fun checkAuthentication(requestUser: RequestUser): ResponseUser {
 
-        var responseUser: Boolean? = null
-        try {
-            val responseJson = sendRequest(requestJson)
-            responseJson?.let {
-                responseUser = ResponseUser(it).getResultLogout()
-            }
+        val resp = ResponseUser()
 
-        } catch (e: ZabbixApiException) {
-            throw ZabbixApiException(e)
-        }
-        return responseUser
-    }
-
-    fun checkAuthentication(sessionid: String, extend: Boolean = true): ResponseUser.Result? {
-        val requestUser: RequestUser
-
-        if (extend) {
-            requestUser = RequestUser.Builder()
-                .setMethod("user.checkAuthentication")
-                .setExtend(extend)
-                .setSessionId(sessionid)
-                .build()
-            println("продлена сессия")
-        } else {
-            requestUser = RequestUser.Builder()
-                .setMethod("user.checkAuthentication")
-                .setExtend(extend)
-                .setSessionId(sessionid)
-                .build()
-            println("проверка сессии")
-        }
+        requestUser.method = "user.checkAuthentication"
 
         val requestJson = serialize(requestUser)
 
-        var responseUser: ResponseUser.Result? = null
         try {
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                responseUser = ResponseUser(it).getResultcheckAuthentication()
+                val actualObj = mapper.readTree(responseJson)
+                val jsonNode1 = actualObj["result"]
+                val data = jsonNode1.toString()
+
+                resp.result.add(deserialize(data, ResponseUser.Result()) as ResponseUser.Result)
             }
 
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
-        return responseUser
+        return resp
     }
-
-/*
-    fun get(params: Map<String, Any>?): UserObject? {
-        var method = "user.get"
-        return null
-    }
-
-
-    fun create(params:Map<String,Object>?):Sting?{
-        var method="user.create"
-        return null
-    }
-
-    fun delete(params:Map<String,Object>?):Sting?{
-        var method="user.delete"
-        return null
-    }
-
-
-    fun update(params:Map<String,Object>?){
-        var method="user.update"
-
-    }
-*/
 
 }

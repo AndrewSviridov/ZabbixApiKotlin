@@ -29,11 +29,14 @@ object myServise3 {
         zabbixApi.init(properties.url, properties.user, properties.password)
         // zabbixApi.checkAuthentication()
 
+        val test1 = zabbixApi.checkAuthentication()
+        //val test2=   zabbixApi.close()
+
         val host = zabbixApi.host()
 
         //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }
         val requestHost = RequestHost()
-        requestHost.params.output = "extend"
+        requestHost.params.output = arrayListOf("extend")
         // requestHost.params.setHostids(listOf(10084))
 
 
@@ -52,7 +55,8 @@ object myServise3 {
         val item = zabbixApi.item()
 
         val requestItem = RequestItem()
-        requestItem.params.output = "extend"
+        requestItem.params.output = arrayListOf("extend")
+        requestItem.params.addHostId("10084")
         val getItems = item.get(requestItem)
         println("name " + getItems.result[0].name.toString() + " lastCheck " + getItems.result[0].lastclock.toString() + " lastvalue " + getItems.result[0].lastvalue.toString())
 
@@ -65,11 +69,11 @@ object myServise3 {
         val history = zabbixApi.history()
 
         val requestHistory = RequestHistory()
-        requestHistory.params.output = "extend"
-        requestHistory.params.setHistory(3)
-        requestHistory.params.setItemids(listOf(31414))
-        requestHistory.params.setTime_from((date1.time / 1000))
-        requestHistory.params.setTime_till((date2.time / 1000))
+        requestHistory.params.output = arrayListOf("extend")
+        requestHistory.params.history = 3
+        requestHistory.params.itemids = arrayListOf("31414")
+        requestHistory.params.time_from = (date1.time / 1000)
+        requestHistory.params.time_till = (date2.time / 1000)
         requestHistory.params.addSortField("clock")
 
         /*            .method("history.get")
@@ -90,11 +94,11 @@ object myServise3 {
         val event = zabbixApi.event()
 
         val requestEvent = RequestEvent()
-        requestEvent.params.output = "extend"
+        requestEvent.params.output = arrayListOf("extend")
         requestEvent.params.time_from = (date1.time / 1000)
         requestEvent.params.time_till = (date2.time / 1000)
         //todo для всех методов где массивы сделат мметоды добавления по одному
-        requestEvent.params.sortfield = listOf("clock", "eventid")
+        requestEvent.params.sortfield = arrayListOf("clock", "eventid")
 
 /*
     println("------------------- event.get -------------------------")
@@ -117,12 +121,13 @@ object myServise3 {
 
         val getEvents = event.get(requestEvent)
         for (it in getEvents.result) {
+
             //   println(" "+it.)
             //  println("itemid "+it.d.toString()+" clock "+it.clock.toString()+" value "+it.value.toString()+" ns "+it.ns.toString())
         }
 
 
-        zabbixApi.finish()
+        zabbixApi.close()
 
 
     }

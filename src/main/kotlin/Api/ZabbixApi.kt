@@ -4,6 +4,8 @@ import Event.Event
 import History.History
 import Host.Host
 import Item.Item
+import User.RequestUser
+import User.ResponseUser
 import User.User
 
 import org.slf4j.LoggerFactory
@@ -11,50 +13,45 @@ import org.slf4j.LoggerFactory
 class ZabbixApi() {
 
     private val LOGGER = LoggerFactory.getLogger(ZabbixApi::class.java)
-    private var apiUrl: String? = null
-    private var auth: String? = null
+    var apiUrl: String? = null
+    var auth: String? = null
 
     var user: User? = null
     fun init(apiUrl: String, login: String, password: String) {
         this.apiUrl = apiUrl
-        // todo подумать над 2 конструктором , который чисто пароль и логин принимает
-        user = User(apiUrl, auth)
-        this.auth = user?.login(login, password)
+
+        user = User(apiUrl)
+        val requestUser = RequestUser()
+        var responseUser: ResponseUser? = null
+        requestUser.params.user = login
+        requestUser.params.password = password
+        requestUser.params.userData = null
+        responseUser = user?.login(requestUser)
+        this.auth = responseUser?.result?.first()?.sessionid
+        user?.auth = this.auth
+        println()
     }
 
-    fun finish() {
-        logout()
-    }
 
-    fun getAuth(): String? {
-        return auth
-    }
-
-    @Throws(ZabbixApiException::class)
-    fun login(username: String, password: String) {
-
-        //todo добавить передачу параметра userData как надо
-        auth = user?.login(username, password)
-
-    }
-
-    fun checkAuthentication() {
+    fun checkAuthentication(): ResponseUser? {
+        var result: ResponseUser? = null
         auth?.let {
-            val result = user?.checkAuthentication(it)
-            // todo сделать адекватный ответ на действия
-            LOGGER.info(result.toString())
+            val requestUser = RequestUser()
+            requestUser.params.sessionid = auth
+            result = user?.checkAuthentication(requestUser)
         }
+        return result
     }
 
-    fun logout() {
-
+    fun close(): Boolean? {
+        var result: Boolean? = false
         auth?.let {
-            val result = user?.logout(it)
-            // todo сделать адекватный ответ на действия
+            result = user?.logout()
+
             auth = null
-            LOGGER.info(result.toString())
+            user = null
         }
-
+        return result
     }
 
 

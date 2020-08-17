@@ -11,7 +11,8 @@ class ResponseItem() : ZabbixApiResponse() {
     class Result : ItemObject() {
         var evaltype: Int? = null
         var discover: Int? = null
-
+        var formula: String? = null
+        var lifetime: String? = null
     }
 
 }

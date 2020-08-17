@@ -1,8 +1,10 @@
 package Api
 
 
+import User.RequestUser
+import User.ResponseUser
+import User.User
 import com.fasterxml.jackson.core.JsonGenerationException
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -17,10 +19,10 @@ import org.apache.http.util.EntityUtils
 import org.slf4j.LoggerFactory
 
 
-open class ZabbixApiMethod(protected var apiUrl: String?, protected var auth: String?) {
+open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
     val mapper = ObjectMapper().registerModule(KotlinModule())
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    //  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     fun serialize(obj: Any): String {
         var result = ""
@@ -37,19 +39,50 @@ open class ZabbixApiMethod(protected var apiUrl: String?, protected var auth: St
 
     }
 
-    // todo сделать try catch
-    fun deserialize(json: String, obj: Any): Any? {
+    fun checkSession(): ResponseUser? {
+        var resp: ResponseUser? = null
+        try {
 
-        return mapper.readValue(json, obj::class.java)
+            val user = User(apiUrl, auth)
+            val req = RequestUser()
+            req.params.extend = true
+            req.params.sessionid = auth
+            resp = user.checkAuthentication(req)
 
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        return resp
     }
 
-    // todo сделать try catch
-    fun deserializeToList(json: String, obj: Any): Any? {
-        val javaType: CollectionType = mapper.typeFactory
-            .constructCollectionType(MutableList::class.java, obj::class.java)
-        val asList: Any = mapper.readValue(json, javaType)
 
+    fun deserialize(json: String, obj: Any): Any? {
+        var result: Any? = null
+        try {
+            result = mapper.readValue(json, obj::class.java)
+
+        } catch (e: JsonGenerationException) {
+            e.printStackTrace();
+        } catch (e: JsonMappingException) {
+            e.printStackTrace();
+        }
+        return result
+    }
+
+
+    fun deserializeToList(json: String, obj: Any): Any? {
+        var asList: Any? = null
+        try {
+            val javaType: CollectionType = mapper.typeFactory
+                .constructCollectionType(MutableList::class.java, obj::class.java)
+            asList = mapper.readValue(json, javaType)
+
+
+        } catch (e: JsonGenerationException) {
+            e.printStackTrace();
+        } catch (e: JsonMappingException) {
+            e.printStackTrace();
+        }
 
         return asList
     }
@@ -59,6 +92,8 @@ open class ZabbixApiMethod(protected var apiUrl: String?, protected var auth: St
     @Throws(ZabbixApiException::class)
     fun sendRequest(requestJson: String): String? {
         logger.debug("request json is \n$requestJson")
+
+        checkSession()
 
         // HTTP POST
         val httpResponse: HttpResponse

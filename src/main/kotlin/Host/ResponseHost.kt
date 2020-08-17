@@ -3,19 +3,8 @@ package Host
 import Api.ZabbixApiResponse
 
 
-class ResponseHost(val responseHost: String) : ZabbixApiResponse() {
-    // val result: List<Result> = ArrayList()
-// может сделать как список и его брать всегда
-    fun getResult(): Any? {
-        val actualObj = mapper.readTree(responseHost)
-
-        val jsonNode1 = actualObj["result"]
-        val data = jsonNode1.toString()
-        //val tr=Result()
-        //val tht=serialize(tr)
-        val result = deserializeToList(data, Result()) //as ResponseHost.Result
-        return result
-    }
+class ResponseHost() : ZabbixApiResponse() {
+    var result: MutableList<Result> = ArrayList()
 
     class Result : HostObject() {
         var templateid: Int? = null

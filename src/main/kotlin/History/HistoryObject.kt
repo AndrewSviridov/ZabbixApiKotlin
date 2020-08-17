@@ -16,7 +16,6 @@ open class HistoryObject {
     /**
      * Use only Text Hisotry
      */
-    var text: String? = null
     var id: Int? = null
 
     /**
@@ -35,7 +34,7 @@ open class HistoryObject {
      * Windows event log entry source.
      * Use Only Log Hisotry
      */
-    var source: Int? = null
+    var source: String? = null
 
     /**
      * Windows event log entry time.
@@ -43,19 +42,7 @@ open class HistoryObject {
      */
     var timestamp: Long? = null
 
-    /*
-        val timestampDate: Date?
-            get() = if (timestamp != null && timestamp != 0L) {
-                Date(timestamp!!)
-            } else null
-
-        val clockDate: Date?
-            get() = if (clock != null && clock != 0L) {
-                Date(clock!!)
-            } else null
-    */
     enum class HISOTRY_OBJECT_TYPE(var value: Int) {
         FLOAT(0), STRING(1), LOG(2), INTEGER(3), TEXT(4);
-
     }
 }

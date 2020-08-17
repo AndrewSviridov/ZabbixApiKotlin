@@ -1,6 +1,5 @@
 package Api
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.type.CollectionType
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -11,7 +10,7 @@ open class ZabbixApiResponse {
     private val jsonrpc: String? = null
 
     val mapper = ObjectMapper().registerModule(KotlinModule())
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    //    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     // todo сделать try catch
     fun deserialize(json: String, obj: Any): Any? {

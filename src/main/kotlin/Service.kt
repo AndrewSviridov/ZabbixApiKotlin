@@ -152,16 +152,19 @@ object Service {
         val getRequestEvent: Request = RequestBuilder.newBuilder()
             .method("event.get")
             .paramEntry("output", "extend")
-            .paramEntry("time_from", (date1.time / 1000).toString())
-            .paramEntry("time_till", (date2.time / 1000).toString())
-            .paramEntry("sortfield", arr)
-            .paramEntry("sortorder", "desc")
+            //     .paramEntry("time_from", (date1.time / 1000).toString())
+            //   .paramEntry("time_till", (date2.time / 1000).toString())
+            // .paramEntry("sortfield", arr)
+            //.paramEntry("sortorder", "desc")
             .build()
         val getResponseEvent: JSONObject = zabbixApi.call(getRequestEvent)
         println(org.json.JSONObject(getRequestEvent.toString()).toString(2));
         println(org.json.JSONObject(getResponseEvent.toString()).toString(2));
 
         println("------------------- history.get -------------------------")
+        val arr3 = JSONArray()
+        arr[0] = "clock"
+        arr[1] = "value"
         val getRequestItemHistory: Request = RequestBuilder.newBuilder()
             .method("history.get")
             .paramEntry("output", "extend")
