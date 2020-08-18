@@ -4,7 +4,8 @@ import Api.ZabbixApiException
 import Api.ZabbixApiMethod
 
 
-class Item(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
+class Item(apiUrl: String?, auth: String?, private val login: String? = null, private val password: String? = null) :
+    ZabbixApiMethod(apiUrl, auth) {
     @Throws(ZabbixApiException::class)
     fun get(requestItem: RequestItem): ResponseItem {
 
@@ -17,6 +18,7 @@ class Item(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
 
 
         try {
+            checkSession(login, password)
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
                 val actualObj = mapper.readTree(responseJson)

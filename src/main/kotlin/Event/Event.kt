@@ -3,7 +3,8 @@ package Event
 import Api.ZabbixApiException
 import Api.ZabbixApiMethod
 
-class Event(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
+class Event(apiUrl: String?, auth: String?, private val login: String? = null, private val password: String? = null) :
+    ZabbixApiMethod(apiUrl, auth) {
     @Throws(ZabbixApiException::class)
     fun get(requestEvent: RequestEvent): ResponseEvent {
 
@@ -15,6 +16,7 @@ class Event(apiUrl: String?, auth: String?) : ZabbixApiMethod(apiUrl, auth) {
         val requestJson = serialize(requestEvent)
 
         try {
+            checkSession(login, password)
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
                 val actualObj = mapper.readTree(responseJson)

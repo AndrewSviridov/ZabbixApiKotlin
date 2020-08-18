@@ -1,8 +1,5 @@
 import Api.ZabbixApi
-import Event.RequestEvent
-import History.RequestHistory
 import Host.RequestHost
-import Item.RequestItem
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -51,7 +48,10 @@ object myServise3 {
         // val js =gson.toJson(test("ttt"))
 
         val getHosts = host.get(requestHost)
-
+        for (it in getHosts.result) {
+            println("name " + it.name.toString() + " lastCheck " + it.discover + " lastvalue " + it.hostid)
+        }
+/*
         val item = zabbixApi.item()
 
         val requestItem = RequestItem()
@@ -76,14 +76,6 @@ object myServise3 {
         requestHistory.params.time_till = (date2.time / 1000)
         requestHistory.params.addSortField("clock")
 
-        /*            .method("history.get")
-            .paramEntry("output", "extend")
-            .paramEntry("history", 3)
-            .paramEntry("itemids", "31414") // id item
-            .paramEntry("time_from", (date1.time / 1000).toString())
-            .paramEntry("time_till", (date2.time / 1000).toString())
-            .paramEntry("sortfield", "clock")
-            .paramEntry("sortorder", "DESC")*/
 
         val getHistorys = history.get(requestHistory)
         for (it in getHistorys.result) {
@@ -100,24 +92,7 @@ object myServise3 {
         //todo для всех методов где массивы сделат мметоды добавления по одному
         requestEvent.params.sortfield = arrayListOf("clock", "eventid")
 
-/*
-    println("------------------- event.get -------------------------")
-        println("------------------- " + Timestamp(date1.time) + " по " + Timestamp(date2.time) + " -------------------------")
-        val arr = JSONArray()
-        arr[0] = "clock"
-        arr[1] = "eventid"
-        val getRequestEvent: Request = RequestBuilder.newBuilder()
-            .method("event.get")
-            .paramEntry("output", "extend")
-            .paramEntry("time_from", (date1.time / 1000).toString())
-            .paramEntry("time_till", (date2.time / 1000).toString())
-            .paramEntry("sortfield", arr)
-            .paramEntry("sortorder", "desc")
-            .build()
-        val getResponseEvent: JSONObject = zabbixApi.call(getRequestEvent)
-        println(org.json.JSONObject(getRequestEvent.toString()).toString(2));
-        println(org.json.JSONObject(getResponseEvent.toString()).toString(2));
- */
+
 
         val getEvents = event.get(requestEvent)
         for (it in getEvents.result) {
@@ -125,7 +100,7 @@ object myServise3 {
             //   println(" "+it.)
             //  println("itemid "+it.d.toString()+" clock "+it.clock.toString()+" value "+it.value.toString()+" ns "+it.ns.toString())
         }
-
+*/
 
         zabbixApi.close()
 

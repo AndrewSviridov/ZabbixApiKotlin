@@ -27,7 +27,12 @@ import Api.ZabbixApiException
 import Api.ZabbixApiMethod
 
 
-class User(apiUrl: String?, auth: String? = null) : ZabbixApiMethod(apiUrl, auth) {
+class User(
+    apiUrl: String?,
+    auth: String? = null,
+    private val login: String? = null,
+    private val password: String? = null
+) : ZabbixApiMethod(apiUrl, auth) {
 
 
     @Throws(ZabbixApiException::class)

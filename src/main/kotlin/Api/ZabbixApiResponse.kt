@@ -1,14 +1,10 @@
 package Api
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.type.CollectionType
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-
 
 open class ZabbixApiResponse {
     var id = 0
     private val jsonrpc: String? = null
-
+/*
     val mapper = ObjectMapper().registerModule(KotlinModule())
     //    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -30,6 +26,8 @@ open class ZabbixApiResponse {
         return asList
 
     }
+    */
+
     /*
        var mapCollectionType: `var` = mapper.typeFactory
            .constructCollectionType(MutableList::class.java, PersonV2::class.java)

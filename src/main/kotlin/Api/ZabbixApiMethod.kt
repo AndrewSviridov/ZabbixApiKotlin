@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
     val mapper = ObjectMapper().registerModule(KotlinModule())
-    //  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+     // .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     fun serialize(obj: Any): String {
         var result = ""
@@ -39,7 +39,7 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
     }
 
-    fun checkSession(): ResponseUser? {
+    fun checkSession(login: String?, password: String?): ResponseUser? {
         var resp: ResponseUser? = null
         try {
 
@@ -49,9 +49,18 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
             req.params.sessionid = auth
             resp = user.checkAuthentication(req)
 
+            if (resp.result.isNullOrEmpty()) {
+
+                val req = RequestUser()
+                req.params.password = password
+                req.params.user = login
+                resp = user.login(req)
+            }
+
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
+
         return resp
     }
 
@@ -93,7 +102,6 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
     fun sendRequest(requestJson: String): String? {
         logger.debug("request json is \n$requestJson")
 
-        checkSession()
 
         // HTTP POST
         val httpResponse: HttpResponse
