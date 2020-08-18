@@ -18,8 +18,8 @@ open class ItemObject {
     var flags: Int? = null
     var follow_redirects: Int? = null
 
-    // todo проверить
-    // var headers:ArrayList<Pair<String,String>>?=null
+
+    var headers: ArrayList<Map<String, String>>? = null
     var history: String? = null
     var http_proxy: String? = null
     var inventory_link: String? = null
@@ -39,7 +39,7 @@ open class ItemObject {
     var privatekey: String? = null
     var publickey: String? = null
 
-    // todo проверить
+
     var query_fields: ArrayList<Map<String, String>>? = null
     var request_method: Int? = null
     var retrieve_mode: Int? = null

@@ -10,7 +10,7 @@ class History(apiUrl: String?, auth: String?, private val login: String? = null,
     @Throws(ZabbixApiException::class)
     fun get(requestHistory: RequestHistory): ResponseHistory {
 
-        val resp = ResponseHistory()
+        var resp = ResponseHistory()
 
         requestHistory.auth = auth
         requestHistory.method = "history.get"
@@ -21,11 +21,13 @@ class History(apiUrl: String?, auth: String?, private val login: String? = null,
             checkSession(login, password)
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
+                resp = deserialize(responseJson, resp) as ResponseHistory
+                /*
                 val actualObj = mapper.readTree(responseJson)
                 val jsonNode1 = actualObj["result"]
                 val data = jsonNode1.toString()
-
-                resp.result = deserializeToList(data, ResponseHistory.Result()) as MutableList<ResponseHistory.Result>
+*/
+                // resp.result = deserializeToList(data, ResponseHistory.Result()) as MutableList<ResponseHistory.Result>
 
             }
         } catch (e: ZabbixApiException) {

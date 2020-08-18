@@ -3,7 +3,7 @@ package Api
 
 open class ZabbixApiResponse {
     var id = 0
-    private val jsonrpc: String? = null
+    val jsonrpc: String? = null
 /*
     val mapper = ObjectMapper().registerModule(KotlinModule())
     //    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

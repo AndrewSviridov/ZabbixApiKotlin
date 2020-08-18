@@ -1,12 +1,6 @@
 package History
 
-/**
- * History objects differ depending on the item's type of information.
- * They are created by the Zabbix server and cannot be modified via the API.
- *
- *
- * Created by Suguru Yajima on 2014/06/03.
- */
+
 open class HistoryObject {
     var clock: Long? = null
     var itemid: Int? = null

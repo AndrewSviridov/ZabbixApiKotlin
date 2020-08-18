@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
     val mapper = ObjectMapper().registerModule(KotlinModule())
-     // .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    //  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     fun serialize(obj: Any): String {
         var result = ""
@@ -122,6 +122,7 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
         if (httpResponse.getStatusLine().statusCode != HttpStatus.SC_OK) {
             throw ZabbixApiException("HTTP Error : $responseBody")
         }
+
 
         // response message to JSON Object
         val responseJson: JsonNode

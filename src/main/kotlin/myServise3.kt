@@ -1,5 +1,8 @@
 import Api.ZabbixApi
+import Event.RequestEvent
+import History.RequestHistory
 import Host.RequestHost
+import Item.RequestItem
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -26,14 +29,14 @@ object myServise3 {
         zabbixApi.init(properties.url, properties.user, properties.password)
         // zabbixApi.checkAuthentication()
 
-        val test1 = zabbixApi.checkAuthentication()
+        //   val test1 = zabbixApi.checkAuthentication()
         //val test2=   zabbixApi.close()
 
         val host = zabbixApi.host()
 
         //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }
         val requestHost = RequestHost()
-        requestHost.params.output = arrayListOf("extend")
+        //  requestHost.params.output = arrayListOf("extend")
         // requestHost.params.setHostids(listOf(10084))
 
 
@@ -51,11 +54,10 @@ object myServise3 {
         for (it in getHosts.result) {
             println("name " + it.name.toString() + " lastCheck " + it.discover + " lastvalue " + it.hostid)
         }
-/*
         val item = zabbixApi.item()
 
         val requestItem = RequestItem()
-        requestItem.params.output = arrayListOf("extend")
+        //  requestItem.params.output = arrayListOf("extend")
         requestItem.params.addHostId("10084")
         val getItems = item.get(requestItem)
         println("name " + getItems.result[0].name.toString() + " lastCheck " + getItems.result[0].lastclock.toString() + " lastvalue " + getItems.result[0].lastvalue.toString())
@@ -86,7 +88,7 @@ object myServise3 {
         val event = zabbixApi.event()
 
         val requestEvent = RequestEvent()
-        requestEvent.params.output = arrayListOf("extend")
+        //  requestEvent.params.output = arrayListOf("extend")
         requestEvent.params.time_from = (date1.time / 1000)
         requestEvent.params.time_till = (date2.time / 1000)
         //todo для всех методов где массивы сделат мметоды добавления по одному
@@ -98,9 +100,9 @@ object myServise3 {
         for (it in getEvents.result) {
 
             //   println(" "+it.)
-            //  println("itemid "+it.d.toString()+" clock "+it.clock.toString()+" value "+it.value.toString()+" ns "+it.ns.toString())
+            println("itemid " + it.name.toString() + " clock " + it.objectid.toString())
         }
-*/
+
 
         zabbixApi.close()
 

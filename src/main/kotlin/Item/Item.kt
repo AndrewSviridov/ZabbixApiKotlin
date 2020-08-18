@@ -9,7 +9,7 @@ class Item(apiUrl: String?, auth: String?, private val login: String? = null, pr
     @Throws(ZabbixApiException::class)
     fun get(requestItem: RequestItem): ResponseItem {
 
-        val resp = ResponseItem()
+        var resp = ResponseItem()
 
         requestItem.auth = auth
         requestItem.method = "item.get"
@@ -21,19 +21,25 @@ class Item(apiUrl: String?, auth: String?, private val login: String? = null, pr
             checkSession(login, password)
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                val actualObj = mapper.readTree(responseJson)
-                val jsonNode1 = actualObj["result"]
-                val data = jsonNode1.toString()
 
+                /*      val gson = Gson()
+                      val test=gson.fromJson(responseJson,ResponseItem::class.java)
+      */
+
+                resp = deserialize(responseJson, resp) as ResponseItem
+
+                /*        val actualObj = mapper.readTree(responseJson)
+                        val jsonNode1 = actualObj["result"]
+                        val data = jsonNode1.toString()
+        */
 
 // Deserialization
 
 // Deserialization
                 //val one = gson.fromJson(data,ResponseItem.Result())
-                /*      val gson = Gson()
-                      val test=gson.fromJson(data,ResponseItem.Result()::class.java)
-      */
-                resp.result = deserializeToList(data, ResponseItem.Result()) as MutableList<ResponseItem.Result>
+
+
+                //   resp.result = deserializeToList(data, ResponseItem.Result()) as MutableList<ResponseItem.Result>
 
             }
         } catch (e: ZabbixApiException) {

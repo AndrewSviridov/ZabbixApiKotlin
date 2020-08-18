@@ -8,8 +8,8 @@ open class EventObject {
     val `object`: Int? = null
     val objectid: String? = null
     val acknowledged: Int? = null
-    private val clock: Long? = null
-    private val ns: Int? = null
+    val clock: Long? = null
+    val ns: Int? = null
     val name: String? = null
     val value: Int? = null
     val severity: Int? = null
@@ -17,9 +17,11 @@ open class EventObject {
     val c_eventid: String? = null
     val correlationid: String? = null
     val c_eveuseridntid: String? = null
+    var userid: String? = null
     val suppressed: Int? = null
     val opdata: String? = null
     var urls: ArrayList<Url>? = null
+
 
     /*
     val clockDate: Date?

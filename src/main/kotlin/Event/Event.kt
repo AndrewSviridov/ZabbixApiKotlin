@@ -8,7 +8,7 @@ class Event(apiUrl: String?, auth: String?, private val login: String? = null, p
     @Throws(ZabbixApiException::class)
     fun get(requestEvent: RequestEvent): ResponseEvent {
 
-        val resp = ResponseEvent()
+        var resp = ResponseEvent()
 
         requestEvent.auth = auth
         requestEvent.method = "event.get"
@@ -19,12 +19,13 @@ class Event(apiUrl: String?, auth: String?, private val login: String? = null, p
             checkSession(login, password)
             val responseJson = sendRequest(requestJson)
             responseJson?.let {
-                val actualObj = mapper.readTree(responseJson)
-                val jsonNode1 = actualObj["result"]
-                val data = jsonNode1.toString()
+                resp = deserialize(responseJson, resp) as ResponseEvent
+                /*     val actualObj = mapper.readTree(responseJson)
+                     val jsonNode1 = actualObj["result"]
+                     val data = jsonNode1.toString()
 
-                resp.result = deserializeToList(data, ResponseEvent.Result()) as MutableList<ResponseEvent.Result>
-
+                     resp.result = deserializeToList(data, ResponseEvent.Result()) as MutableList<ResponseEvent.Result>
+     */
             }
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
