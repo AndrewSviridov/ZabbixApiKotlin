@@ -3,9 +3,7 @@ package History
 import Api.GetRequestCommonParams
 import Api.ZabbixApiRequest
 import Api.ZbxListUtils
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,12 +20,12 @@ class RequestHistory() : ZabbixApiRequest() {
         var time_till: Long? = null
 
         // из за ошибки в Api приходиться так сделать с параметром output
-        @JsonIgnore
+  /*      @JsonIgnore
         override var output: ArrayList<String>? = null
 
         @JsonProperty("output")
         var output1: String? = null
-
+*/
         fun addHostId(id: String) {
             hostids = ZbxListUtils.add(hostids, id)
         }

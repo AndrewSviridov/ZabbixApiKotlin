@@ -43,7 +43,7 @@ object Service {
         arrFields[0] = "extend"
         println("------------------- host.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
-            .method("host.get").paramEntry("output", arrFields)
+            .method("host.get").paramEntry("output", "extend")
             //.paramEntry("hostids",arr2)
             .build()
         val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)

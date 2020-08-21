@@ -1,80 +1,153 @@
 package Api
 
 import Event.Event
+import Event.RequestEvent
+import Event.ResponseEvent
 import History.History
+import History.RequestHistory
+import History.ResponseHistory
 import Host.Host
+import Host.RequestHost
+import Host.ResponseHost
 import Item.Item
-import User.RequestUser
-import User.ResponseUser
+import Item.RequestItem
+import Item.ResponseItem
 import User.User
-
 import org.slf4j.LoggerFactory
 
-class ZabbixApi() {
+class ZabbixApi(private var apiUrl: String, login: String, password: String) {
 
     private val LOGGER = LoggerFactory.getLogger(ZabbixApi::class.java)
-    var apiUrl: String? = null
-    var auth: String? = null
-    private var login: String? = null
-    private var password: String? = null
 
-    var user: User? = null
-    fun init(apiUrl: String, login: String, password: String) {
-        this.apiUrl = apiUrl
-        this.login = login
-        this.password = password
+    var user: User
 
-        user = User(apiUrl)
-        val requestUser = RequestUser()
-        var responseUser: ResponseUser? = null
-        requestUser.params.user = login
-        requestUser.params.password = password
-        requestUser.params.userData = null
-        responseUser = user?.login(requestUser)
-        this.auth = responseUser?.result?.first()?.sessionid
-        user?.auth = this.auth
-
+    init {
+        user = User(apiUrl, login, password)
+        user.auth = user.login().result[0].sessionid
     }
 
+    fun login(login: String, password: String): String? {
+        var result: String? = null
+        user.login = login
+        user.password = password
 
-    fun checkAuthentication(): ResponseUser? {
-        var result: ResponseUser? = null
-        auth?.let {
-            val requestUser = RequestUser()
-            requestUser.params.sessionid = auth
-            result = user?.checkAuthentication(requestUser)
-        }
+        result = user.login().result[0].sessionid
+
         return result
     }
 
-    fun close(): Boolean? {
+    fun logout(): Boolean? {
         var result: Boolean? = false
-        auth?.let {
-            result = user?.logout()
+        user.auth?.let {
+            result = user.logout()
 
-            auth = null
-            user = null
-            password = null
-            login = null
         }
         return result
+    }
+
+    @Throws(ZabbixApiException::class)
+    fun getHostIdsAndNames(): ArrayList<Pair<String, String>> {
+        val requestHost = RequestHost()
+        val resp: ResponseHost
+        requestHost.params.output = arrayListOf("hostid", "name")
+        try {
+            resp = host().get(requestHost)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        val result = ArrayList<Pair<String, String>>()
+        for (t in resp.result) {
+            if (t.name != null && t.hostid != null) {
+                result.add(Pair(t.name, t.hostid) as Pair<String, String>)
+            }
+        }
+        return result
+    }
+
+    @Throws(ZabbixApiException::class)
+    fun getAllHosts(): MutableList<ResponseHost.Result> {
+        val requestHost = RequestHost()
+        val resp: ResponseHost
+        try {
+            resp = host().get(requestHost)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        return resp.result
+    }
+
+
+    @Throws(ZabbixApiException::class)
+    fun getEventsForPeriod(hostid: String, time_from: Long, time_till: Long): MutableList<ResponseEvent.Result> {
+        val requestEvent = RequestEvent()
+        val resp: ResponseEvent
+        requestEvent.params.time_from = time_from
+        requestEvent.params.time_till = time_till
+        requestEvent.params.hostids = arrayListOf(hostid)
+        //  requestEvent.params.output= arrayListOf("name","acknowledged","clock","ns","severity","source")
+
+        try {
+            resp = event().get(requestEvent)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+
+        return resp.result
+    }
+
+    @Throws(ZabbixApiException::class)
+    fun getAllItem(hostid: String): MutableList<ResponseItem.Result> {
+        val requestItem = RequestItem()
+        val resp: ResponseItem
+        requestItem.params.hostids = arrayListOf(hostid)
+        //  requestItem.params.output= arrayListOf("itemid","name","lastclock","lastvalue","prevvalue")
+
+        try {
+            resp = item().get(requestItem)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+
+        return resp.result
+    }
+
+    @Throws(ZabbixApiException::class)
+    fun getHistoryItem(itemid: String, timeFrom: Long, timeTile: Long): MutableList<ResponseHistory.Result> {
+        val requestHistory = RequestHistory()
+        val resp: ResponseHistory
+        requestHistory.params.itemids = arrayListOf(itemid)
+        requestHistory.params.time_from = timeFrom
+        requestHistory.params.time_till = timeTile
+
+        try {
+            resp = history().get(requestHistory)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        return resp.result
+
     }
 
 
     fun host(): Host {
-        return Host(apiUrl, auth, login, password)
+        return Host(user)
     }
 
     fun item(): Item {
-        return Item(apiUrl, auth, login, password)
+        return Item(user)
     }
 
     fun history(): History {
-        return History(apiUrl, auth, login, password)
+        return History(user)
     }
 
     fun event(): Event {
-        return Event(apiUrl, auth, login, password)
+        return Event(user)
     }
+
+    fun user(): User {
+        return user
+    }
+
 
 }

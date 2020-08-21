@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonSerialize( using =GetRequestCommonParamsCustomSerializer.class)
 open class GetRequestCommonParams() {
     var countOutput: Boolean? = null
 
@@ -15,7 +16,7 @@ open class GetRequestCommonParams() {
 
     var limit: Int? = null
 
-    open var output: ArrayList<String>? = null
+    var output: ArrayList<String>? = null
 
     var preservekeys: Boolean? = null
 
@@ -32,11 +33,22 @@ open class GetRequestCommonParams() {
     var startSearch: Boolean? = null
 
 
+    fun addFilterField(field: Pair<String, ArrayList<String>>) {
+        filter = ZbxListUtils.add(filter, field)
+    }
 
+    fun addSearchField(field: Pair<String, String>) {
+        search = ZbxListUtils.add(search, field)
+    }
+
+    fun addOutputField(field: String) {
+        output = ZbxListUtils.add(output, field)
+    }
 
     fun addSortField(field: String) {
         sortfield = ZbxListUtils.add(sortfield, field)
     }
+
 
     fun addSortOrder(order: String) {
         sortorder = ZbxListUtils.add(sortorder, order)
@@ -44,3 +56,5 @@ open class GetRequestCommonParams() {
 
 
 }
+
+

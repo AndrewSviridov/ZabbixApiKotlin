@@ -1,10 +1,13 @@
 import Api.ZabbixApi
+import Api.ZabbixApiMethod
 import Event.RequestEvent
 import History.RequestHistory
 import Host.RequestHost
 import Item.RequestItem
+import com.google.gson.GsonBuilder
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+
 
 object myServise3 {
 
@@ -25,17 +28,23 @@ object myServise3 {
         val properties = PropertiesClassK()
         // login to zabbix
 
-        val zabbixApi = ZabbixApi()
-        zabbixApi.init(properties.url, properties.user, properties.password)
+        val zabbixApi = ZabbixApi(properties.url, properties.user, properties.password)
         // zabbixApi.checkAuthentication()
-
+        val tt = zabbixApi.user.auth
         //   val test1 = zabbixApi.checkAuthentication()
-        //val test2=   zabbixApi.close()
+        // val test2= zabbixApi.logout()
 
         val host = zabbixApi.host()
+        val rer = zabbixApi.getAllHosts()
+        val tt1 = zabbixApi.getHostIdsAndNames()
+        val trt = zabbixApi.getAllItem("10084")
+        val gg = zabbixApi.getHistoryItem("31414", (date1.time / 1000), (date2.time / 1000))
+        val rre = zabbixApi.getEventsForPeriod("10084", (date1.time / 1000), (date2.time / 1000))
 
         //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }
         val requestHost = RequestHost()
+        requestHost.params.editable = true
+        //  requestHost.params.output= arrayListOf("extend")
         //  requestHost.params.output = arrayListOf("extend")
         // requestHost.params.setHostids(listOf(10084))
 
@@ -50,7 +59,17 @@ object myServise3 {
 
         // val js =gson.toJson(test("ttt"))
 
+        val tet = ZabbixApiMethod()
         val getHosts = host.get(requestHost)
+        val pr = zabbixApi.user.auth
+
+        val gson = GsonBuilder().setPrettyPrinting().create() // pretty print
+
+        val prettyJson = gson.toJson(tet.serialize(requestHost))
+        println(prettyJson)
+        println("//////////////////////////////")
+        val prettyJson2 = gson.toJson(getHosts)
+        println(prettyJson2)
         for (it in getHosts.result) {
             println("name " + it.name.toString() + " lastCheck " + it.discover + " lastvalue " + it.hostid)
         }
@@ -71,7 +90,7 @@ object myServise3 {
         val history = zabbixApi.history()
 
         val requestHistory = RequestHistory()
-        requestHistory.params.output = arrayListOf("extend")
+        //   requestHistory.params.output = arrayListOf("extend")
         requestHistory.params.history = 3
         requestHistory.params.itemids = arrayListOf("31414")
         requestHistory.params.time_from = (date1.time / 1000)
@@ -104,7 +123,7 @@ object myServise3 {
         }
 
 
-        zabbixApi.close()
+        zabbixApi.logout()
 
 
     }

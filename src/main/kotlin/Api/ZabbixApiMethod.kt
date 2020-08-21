@@ -1,15 +1,12 @@
 package Api
 
 
-import User.RequestUser
-import User.ResponseUser
-import User.User
+import CcustomSerializer.GetRequestCommonParamsCustomSerializer
 import com.fasterxml.jackson.core.JsonGenerationException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.type.CollectionType
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.http.HttpResponse
 import org.apache.http.HttpStatus
 import org.apache.http.client.methods.HttpPost
@@ -19,11 +16,33 @@ import org.apache.http.util.EntityUtils
 import org.slf4j.LoggerFactory
 
 
-open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
+open class ZabbixApiMethod() {
 
-    val mapper = ObjectMapper().registerModule(KotlinModule())
-    //  .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    companion object {
+        private val logger = LoggerFactory.getLogger(ZabbixApiMethod::class.java)
+        val kot = KotlinModule()
 
+        //  val mapper = ObjectMapper()
+        val mapper = jacksonObjectMapper()
+        // val simpleModule:SimpleModule = SimpleModule()
+
+    }
+
+    init {
+        //  println("3333333")
+        kot.addSerializer(GetRequestCommonParams::class.java, GetRequestCommonParamsCustomSerializer())
+        //   mapper.registerModule(kot)
+        //simpleModule.addSerializer(GetRequestCommonParamsCustomSerializer())
+        //mapper.regi
+    }
+
+    //simpleModule.addSerializer(Get);
+    // mapper.registerModule(simpleModule);
+    /*  SimpleModule simpleModule = new SimpleModule("SimpleModule",
+      new Version(1,0,0,null));
+      simpleModule.addSerializer(new ItemSerializer());
+      mapper.registerModule(simpleModule);
+      */
     fun serialize(obj: Any): String {
         var result = ""
         try {
@@ -39,32 +58,6 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
     }
 
-    fun checkSession(login: String?, password: String?): ResponseUser? {
-        var resp: ResponseUser? = null
-        try {
-
-            val user = User(apiUrl, auth)
-            val req = RequestUser()
-            req.params.extend = true
-            req.params.sessionid = auth
-            resp = user.checkAuthentication(req)
-
-            if (resp.result.isNullOrEmpty()) {
-
-                val req = RequestUser()
-                req.params.password = password
-                req.params.user = login
-                resp = user.login(req)
-            }
-
-        } catch (e: ZabbixApiException) {
-            throw ZabbixApiException(e)
-        }
-
-        return resp
-    }
-
-
     fun deserialize(json: String, obj: Any): Any? {
         var result: Any? = null
         try {
@@ -79,39 +72,19 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
     }
 
 
-    fun deserializeToList(json: String, obj: Any): Any? {
-        var asList: Any? = null
-        try {
-            val javaType: CollectionType = mapper.typeFactory
-                .constructCollectionType(MutableList::class.java, obj::class.java)
-            asList = mapper.readValue(json, javaType)
-
-
-        } catch (e: JsonGenerationException) {
-            e.printStackTrace();
-        } catch (e: JsonMappingException) {
-            e.printStackTrace();
-        }
-
-        return asList
-    }
-
-
-    // todo проверить, возможно переделать
     @Throws(ZabbixApiException::class)
-    fun sendRequest(requestJson: String): String? {
+    fun sendRequest(requestJson: String, url: String): String? {
         logger.debug("request json is \n$requestJson")
-
 
         // HTTP POST
         val httpResponse: HttpResponse
-        val httpPost = HttpPost(apiUrl)
+        val httpPost = HttpPost(url)
         var responseBody: String? = null
         try {
             httpPost.setHeader("Content-Type", "application/json-rpc")
             httpPost.entity = StringEntity(requestJson)
             val client = DefaultHttpClient()
-            //HttpClient client = HttpClientBuilder.create().build();
+
             httpResponse = client.execute(httpPost)
             responseBody = EntityUtils.toString(httpResponse.getEntity())
         } catch (e: Exception) {
@@ -125,41 +98,49 @@ open class ZabbixApiMethod(var apiUrl: String?, var auth: String?) {
 
 
         // response message to JSON Object
-        val responseJson: JsonNode
-        responseJson = try {
+        val responseJsonNode: JsonNode
+        responseJsonNode = try {
             mapper.readTree(responseBody)
         } catch (e: Exception) {
             throw ZabbixApiException(e.message)
         }
 
+        val requestJsonNode: JsonNode
+        requestJsonNode = try {
+            mapper.readTree(requestJson)
+        } catch (e: Exception) {
+            throw ZabbixApiException(e.message)
+        }
+
         // API error
-        if (responseJson.has("error")) {
+        if (responseJsonNode.has("error")) {
             var message: String
             message = try {
-                "API Error : " + (responseJson["error"]).toString()
-                // todo возможно другой эксепшен
+
+                "API Error : " + (responseJsonNode["error"]).toString()
+
             } catch (e: Exception) {
                 throw ZabbixApiException(e.message)
             }
             message += "\nRequest:$requestJson"
+            val mesg = responseJsonNode["error"]["data"].toString()
+            if (mesg.contains("re-login")) {
+                throw ZabbixApiExceptionReLogin(message)
+            }
+
             throw ZabbixApiException(message)
         }
 
-        // todo сделать проверку из комментариев
-        // check id
-        //  val gson = Gson()
-        /*val request: ZabbixApiRequest = gson.fromJson(requestJson, ZabbixApiRequest::class.java)
-        val response: ZabbixApiResponse = gson.fromJson(responseBody, ZabbixApiResponse::class.java)
-        if (request.id.equals(response.id) === false) {
-            throw ZabbixApiException("id mismatch")
+
+        if (responseJsonNode.has("id") && requestJsonNode.has("id")) {
+
+            if (!responseJsonNode["id"].isInt.equals(requestJsonNode["id"].isInt)) {
+                throw ZabbixApiException("id mismatch")
+            }
         }
         logger.debug("response json is \n$responseBody")
-        */
-        return responseBody
-    }
 
-    companion object {
-        private val logger = LoggerFactory.getLogger(ZabbixApiMethod::class.java)
+        return responseBody
     }
 
 }

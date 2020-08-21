@@ -12,7 +12,7 @@ class RequestHost() : ZabbixApiRequest() {
     val params = Params()
 
     class Params : GetRequestCommonParams() {
-        override var output: ArrayList<String>? = null
+
         var groupids: ArrayList<Int?>? = null
         var applicationids: ArrayList<Int>? = null
         var dserviceids: ArrayList<Int?>? = null

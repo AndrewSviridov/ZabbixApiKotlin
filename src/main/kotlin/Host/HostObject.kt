@@ -2,7 +2,7 @@ package Host
 
 
 open class HostObject {
-    var hostid: Int? = null
+    var hostid: String? = null
     var host: String? = null
     var available: Int? = null
     var description: String? = null

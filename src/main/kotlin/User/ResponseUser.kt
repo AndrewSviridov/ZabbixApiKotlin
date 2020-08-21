@@ -4,6 +4,7 @@ import Api.ZabbixApiResponse
 import com.fasterxml.jackson.annotation.JsonProperty
 
 class ResponseUser() : ZabbixApiResponse() {
+    @JsonProperty("result")
     var result: MutableList<Result> = ArrayList()
 
     class Result : UserObject() {

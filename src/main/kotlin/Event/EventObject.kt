@@ -23,12 +23,6 @@ open class EventObject {
     var urls: ArrayList<Url>? = null
 
 
-    /*
-    val clockDate: Date?
-        get() = if (clock != null && clock != 0L) {
-            Date(clock)
-        } else null
-*/
     enum class OBJECT_TYPE(var value: Int) {
         TRIGGER(0), DISCOVERED_HOST(1), DISCOVERED_SERVICE(2), AUTO_REGISTERED_HOST(3), ITEM(4), LLD_RULE(5);
 
