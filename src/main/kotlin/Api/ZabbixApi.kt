@@ -20,7 +20,6 @@ class ZabbixApi(private var apiUrl: String, login: String, password: String) {
     private val LOGGER = LoggerFactory.getLogger(ZabbixApi::class.java)
 
     var user: User
-
     init {
         user = User(apiUrl, login, password)
         user.auth = user.login().result[0].sessionid

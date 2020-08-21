@@ -5,8 +5,7 @@ import Api.ZabbixApiMethod
 import User.User
 
 
-class Host(var user: User) :
-    ZabbixApiMethod() {
+class Host(var user: User) : ZabbixApiMethod() {
 
     @Throws(ZabbixApiException::class)
     fun get(requestHost: RequestHost): ResponseHost {

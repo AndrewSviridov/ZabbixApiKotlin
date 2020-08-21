@@ -5,11 +5,12 @@ import Api.ZabbixApiRequest
 import Api.ZbxListUtils
 import com.fasterxml.jackson.annotation.JsonInclude
 
-// todo сделать чтобы и поля с значениями по умолчанию не попадали, как например proxy_host
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class RequestItem() : ZabbixApiRequest() {
+class RequestItem : ZabbixApiRequest() {
 
     val params = Params()
+
     class Params : GetRequestCommonParams() {
         var itemids: ArrayList<String?>? = null
         var groupids: ArrayList<String?>? = null

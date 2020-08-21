@@ -1,11 +1,10 @@
 package Api
 
 
-import CcustomSerializer.GetRequestCommonParamsCustomSerializer
+
 import com.fasterxml.jackson.core.JsonGenerationException
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.apache.http.HttpResponse
 import org.apache.http.HttpStatus
@@ -16,42 +15,23 @@ import org.apache.http.util.EntityUtils
 import org.slf4j.LoggerFactory
 
 
-open class ZabbixApiMethod() {
+open class ZabbixApiMethod {
 
     companion object {
         private val logger = LoggerFactory.getLogger(ZabbixApiMethod::class.java)
-        val kot = KotlinModule()
-
-        //  val mapper = ObjectMapper()
-        val mapper = jacksonObjectMapper()
-        // val simpleModule:SimpleModule = SimpleModule()
-
     }
 
-    init {
-        //  println("3333333")
-        kot.addSerializer(GetRequestCommonParams::class.java, GetRequestCommonParamsCustomSerializer())
-        //   mapper.registerModule(kot)
-        //simpleModule.addSerializer(GetRequestCommonParamsCustomSerializer())
-        //mapper.regi
-    }
+    val mapper = jacksonObjectMapper()
 
-    //simpleModule.addSerializer(Get);
-    // mapper.registerModule(simpleModule);
-    /*  SimpleModule simpleModule = new SimpleModule("SimpleModule",
-      new Version(1,0,0,null));
-      simpleModule.addSerializer(new ItemSerializer());
-      mapper.registerModule(simpleModule);
-      */
     fun serialize(obj: Any): String {
         var result = ""
         try {
             result = mapper.writeValueAsString(obj)
 
         } catch (e: JsonGenerationException) {
-            e.printStackTrace();
+            e.printStackTrace()
         } catch (e: JsonMappingException) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
 
         return result
@@ -64,9 +44,9 @@ open class ZabbixApiMethod() {
             result = mapper.readValue(json, obj::class.java)
 
         } catch (e: JsonGenerationException) {
-            e.printStackTrace();
+            e.printStackTrace()
         } catch (e: JsonMappingException) {
-            e.printStackTrace();
+            e.printStackTrace()
         }
         return result
     }
@@ -86,13 +66,13 @@ open class ZabbixApiMethod() {
             val client = DefaultHttpClient()
 
             httpResponse = client.execute(httpPost)
-            responseBody = EntityUtils.toString(httpResponse.getEntity())
+            responseBody = EntityUtils.toString(httpResponse.entity)
         } catch (e: Exception) {
             throw ZabbixApiException("HTTP Request Error")
         }
 
         // HTTP status error
-        if (httpResponse.getStatusLine().statusCode != HttpStatus.SC_OK) {
+        if (httpResponse.statusLine.statusCode != HttpStatus.SC_OK) {
             throw ZabbixApiException("HTTP Error : $responseBody")
         }
 

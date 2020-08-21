@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-//@JsonSerialize( using =GetRequestCommonParamsCustomSerializer.class)
-open class GetRequestCommonParams() {
+open class GetRequestCommonParams {
     var countOutput: Boolean? = null
 
     var editable: Boolean? = null

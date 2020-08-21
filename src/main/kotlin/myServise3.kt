@@ -114,7 +114,6 @@ object myServise3 {
         requestEvent.params.sortfield = arrayListOf("clock", "eventid")
 
 
-
         val getEvents = event.get(requestEvent)
         for (it in getEvents.result) {
 
@@ -122,6 +121,8 @@ object myServise3 {
             println("itemid " + it.name.toString() + " clock " + it.objectid.toString())
         }
 
+        val prettyJson3 = gson.toJson(tet.serialize(requestEvent))
+        println(prettyJson3)
 
         zabbixApi.logout()
 
