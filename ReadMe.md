@@ -64,7 +64,6 @@ zabbixApi.getHistoryItem("31414",1280947920,1596819665)
 ```kotlin 
 val requestHost = RequestHost()
 requestHost.params.editable = true
-
 val responseHost=zabbixApi.host().get(requestHost)
 ```
 
