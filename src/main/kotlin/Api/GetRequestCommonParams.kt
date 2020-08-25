@@ -1,5 +1,6 @@
 package Api
 
+import com.fasterxml.jackson.annotation.JsonGetter
 import com.fasterxml.jackson.annotation.JsonInclude
 
 
@@ -16,6 +17,18 @@ open class GetRequestCommonParams {
     var limit: Int? = null
 
     var output: ArrayList<String>? = null
+
+    @JsonGetter("output")
+    fun anotherGetOutput(): Any? {
+        output?.let {
+            if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                return it[0]
+            } else {
+                return it
+            }
+        } ?: return null
+    }
 
     var preservekeys: Boolean? = null
 

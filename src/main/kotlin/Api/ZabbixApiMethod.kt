@@ -22,12 +22,17 @@ open class ZabbixApiMethod {
     }
 
     val mapper = jacksonObjectMapper()
+    //  var filters: FilterProvider = SimpleFilterProvider().addFilter("myFilter", SimpleBeanPropertyFilter())
+
+    init {
+
+    }
 
     fun serialize(obj: Any): String {
         var result = ""
         try {
             result = mapper.writeValueAsString(obj)
-
+            //result=mapper.writer(filters).writeValueAsString(obj)
         } catch (e: JsonGenerationException) {
             e.printStackTrace()
         } catch (e: JsonMappingException) {

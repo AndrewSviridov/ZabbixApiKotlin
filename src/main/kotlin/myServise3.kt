@@ -34,16 +34,19 @@ object myServise3 {
         //   val test1 = zabbixApi.checkAuthentication()
         // val test2= zabbixApi.logout()
 
-        val host = zabbixApi.host()
-        val rer = zabbixApi.getAllHosts()
-        val tt1 = zabbixApi.getHostIdsAndNames()
-        val trt = zabbixApi.getAllItem("10084")
-        val gg = zabbixApi.getHistoryItem("31414", (date1.time / 1000), (date2.time / 1000))
-        val rre = zabbixApi.getEventsForPeriod("10084", (date1.time / 1000), (date2.time / 1000))
-
-        //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }
         val requestHost = RequestHost()
         requestHost.params.editable = true
+        requestHost.params.output = arrayListOf("count")
+
+        val host = zabbixApi.host()
+        /*   val rer = zabbixApi.getAllHosts()
+           val tt1 = zabbixApi.getHostIdsAndNames()
+           val trt = zabbixApi.getAllItem("10084")
+           val gg = zabbixApi.getHistoryItem("31414", (date1.time / 1000), (date2.time / 1000))
+           val rre = zabbixApi.getEventsForPeriod("10084", (date1.time / 1000), (date2.time / 1000))
+   */
+        //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }
+
         //  requestHost.params.output= arrayListOf("extend")
         //  requestHost.params.output = arrayListOf("extend")
         // requestHost.params.setHostids(listOf(10084))
