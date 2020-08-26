@@ -14,10 +14,12 @@ class RequestHost : ZabbixApiRequest() {
     class Params : GetRequestCommonParams() {
 
         var groupids: ArrayList<Int?>? = null
+
         var applicationids: ArrayList<Int>? = null
         var dserviceids: ArrayList<Int?>? = null
         var graphids: ArrayList<Int?>? = null
         var hostids: ArrayList<Int?>? = null
+
         var httptestids: ArrayList<Int?>? = null
         var interfaceids: ArrayList<Int?>? = null
         var itemids: ArrayList<Int?>? = null

@@ -3,6 +3,7 @@ package Event
 import AnotherStaff.Tag
 import Api.GetRequestCommonParams
 import Api.ZabbixApiRequest
+import com.fasterxml.jackson.annotation.JsonGetter
 import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -30,12 +31,88 @@ class RequestEvent : ZabbixApiRequest() {
         var problem_time_till: Long? = null
         var value: ArrayList<Int?>? = null
         var selectHosts: ArrayList<String?>? = null
+
+        @JsonGetter("selectHosts")
+        fun anotherGetSelectHosts(): Any? {
+            selectHosts?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
         var selectRelatedObject: ArrayList<String?>? = null
+
+        @JsonGetter("selectRelatedObject")
+        fun anotherGetSelectRelatedObject(): Any? {
+            selectRelatedObject?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
         var select_alerts: ArrayList<String?>? = null
+
+        @JsonGetter("select_alerts")
+        fun anotherGetSelect_alerts(): Any? {
+            select_alerts?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
         var select_acknowledges: ArrayList<String?>? = null
+
+        @JsonGetter("select_acknowledges")
+        fun anotherGetSelect_acknowledges(): Any? {
+            select_acknowledges?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
         var selectTags: ArrayList<String?>? = null
+
+        @JsonGetter("selectTags")
+        fun anotherGetSelectTags(): Any? {
+            selectTags?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
         var selectSuppressionData: ArrayList<String?>? = null
 
+        @JsonGetter("selectSuppressionData")
+        fun anotherGetSelectSuppressionData(): Any? {
+            selectSuppressionData?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
 
     }
 }
