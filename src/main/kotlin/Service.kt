@@ -3,7 +3,6 @@ import com.alibaba.fastjson.JSONObject
 import io.github.hengyunabc.zabbix.api.DefaultZabbixApi
 import io.github.hengyunabc.zabbix.api.Request
 import io.github.hengyunabc.zabbix.api.RequestBuilder
-import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -44,14 +43,14 @@ object Service {
         println("------------------- host.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
             .method("host.get")//.paramEntry("output", "extend")
-            .paramEntry("selectGraphs", "count")
+            .paramEntry("selectHttpTests", "extend")
             // .paramEntry("selectHttpTests","extend")
-            //.paramEntry("hostids",arr2)
+            .paramEntry("hostids", "10084")
             .build()
         val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)
         println(org.json.JSONObject(getRequestHost.toString()).toString(2))
         println(org.json.JSONObject(getResponseHost.toString()).toString(2))
-
+/*
 /*
         val host = "Zabbix server"
         val filter = JSONObject()
@@ -229,6 +228,6 @@ object Service {
             .build()
         val getResponse2: JSONObject = zabbixApi.call(getRequestLogOut)
         println(getResponse2)
-
+*/
     }
 }

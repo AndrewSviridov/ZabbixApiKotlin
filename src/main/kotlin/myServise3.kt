@@ -35,16 +35,25 @@ object myServise3 {
         // val test2= zabbixApi.logout()
 
         val requestHost = RequestHost()
-        requestHost.params.editable = true
-        requestHost.params.output?.add("host")
-        requestHost.params.addOutput("host")
-        requestHost.params.addOutputField("host")
+        //requestHost.params.editable = true
+        //requestHost.params.output?.add("host")
+        //requestHost.params.addOutput("host")
+        //requestHost.params.addOutputField("host")
+        requestHost.params.addHostids("10084")
+        requestHost.params.addSelectApplications("extend")
+        requestHost.params.addSelectGraphs("extend")
+        requestHost.params.addSelectInterfaces("extend")
+        requestHost.params.addSelectGroups("extend")
+        requestHost.params.addSelectHttpTests("extend")
+        // requestHost.params.addSele
         val host = zabbixApi.host()
-        /*   val rer = zabbixApi.getAllHosts()
-           val tt1 = zabbixApi.getHostIdsAndNames()
-           val trt = zabbixApi.getAllItem("10084")
-           val gg = zabbixApi.getHistoryItem("31414", (date1.time / 1000), (date2.time / 1000))
-   */
+        val getHosts1 = host.get(requestHost)
+
+        val rer = zabbixApi.getAllHosts()
+        val tt1 = zabbixApi.getHostIdsAndNames()
+        val trt = zabbixApi.getAllItem("10084")
+        val gg = zabbixApi.getHistoryItem("31414", (date1.time / 1000), (date2.time / 1000))
+
         val rre = zabbixApi.getEventsForPeriod("10084", (date1.time / 1000), (date2.time / 1000))
 
         //val requestHost= zabbixApi.getAuth()?.let { RequestHost() }

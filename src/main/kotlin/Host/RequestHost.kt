@@ -13,25 +13,93 @@ class RequestHost : ZabbixApiRequest() {
 
     class Params : GetRequestCommonParams() {
 
-        var groupids: ArrayList<Int?>? = null
+        var groupids: ArrayList<String?>? = null
+        fun addGroupids(id: String) {
+            groupids = ZbxListUtils.add(groupids, id)
+        }
 
-        var applicationids: ArrayList<Int>? = null
-        var dserviceids: ArrayList<Int?>? = null
-        var graphids: ArrayList<Int?>? = null
-        var hostids: ArrayList<Int?>? = null
+        var applicationids: ArrayList<String>? = null
+        fun addApplicationId(id: String) {
+            applicationids = ZbxListUtils.add(applicationids, id)
+        }
 
-        var httptestids: ArrayList<Int?>? = null
-        var interfaceids: ArrayList<Int?>? = null
-        var itemids: ArrayList<Int?>? = null
-        var maintenanceids: ArrayList<Int?>? = null
+        var dserviceids: ArrayList<String?>? = null
+        fun addDserviceId(id: String) {
+            dserviceids = ZbxListUtils.add(dserviceids, id)
+        }
+
+        var graphids: ArrayList<String?>? = null
+        fun addGraphId(id: String) {
+            graphids = ZbxListUtils.add(graphids, id)
+        }
+
+        var hostids: ArrayList<String?>? = null
+        fun addHostids(id: String) {
+            hostids = ZbxListUtils.add(hostids, id)
+        }
+
+
+        var httptestids: ArrayList<String?>? = null
+        fun addhttptestids(id: String) {
+            httptestids = ZbxListUtils.add(httptestids, id)
+        }
+
+        var interfaceids: ArrayList<String?>? = null
+        fun addInterfaceids(id: String) {
+            interfaceids = ZbxListUtils.add(interfaceids, id)
+        }
+
+        var itemids: ArrayList<String?>? = null
+        fun addItemids(id: String) {
+            itemids = ZbxListUtils.add(itemids, id)
+        }
+
+        var maintenanceids: ArrayList<String?>? = null
+        fun addMaintenanceids(id: String) {
+            maintenanceids = ZbxListUtils.add(maintenanceids, id)
+        }
+
         var monitored_hosts: Boolean? = null
         var proxy_hosts: Boolean? = null
-        var proxyids: ArrayList<Int?>? = null
+
+        var proxyids: ArrayList<String?>? = null
+        fun addProxyids(id: String) {
+            proxyids = ZbxListUtils.add(proxyids, id)
+        }
+
         var templated_hosts: Boolean? = null
-        var templateids: ArrayList<Int?>? = null
-        var triggerids: ArrayList<Int?>? = null
-        var selectGroups: String? = null
+        var templateids: ArrayList<String?>? = null
+        fun addTemplateids(id: String) {
+            templateids = ZbxListUtils.add(templateids, id)
+        }
+
+        var triggerids: ArrayList<String?>? = null
+        fun addTriggerids(id: String) {
+            triggerids = ZbxListUtils.add(triggerids, id)
+        }
+
+        var selectGroups: ArrayList<String>? = null
+        fun addSelectGroups(id: String) {
+            selectGroups = ZbxListUtils.add(selectGroups, id)
+        }
+
+        @JsonGetter("selectGroups")
+        fun anotherGetselectGroups(): Any? {
+            selectGroups?.let {
+                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
+
+                    return it[0]
+                } else {
+                    return it
+                }
+            } ?: return null
+        }
+
+
         var selectApplications: ArrayList<String>? = null
+        fun addSelectApplications(id: String) {
+            selectApplications = ZbxListUtils.add(selectApplications, id)
+        }
 
         @JsonGetter("selectApplications")
         fun anotherGetSelectApplications(): Any? {
@@ -46,6 +114,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectDiscoveries: ArrayList<String>? = null
+        fun addSelectDiscoveries(id: String) {
+            selectDiscoveries = ZbxListUtils.add(selectDiscoveries, id)
+        }
 
         @JsonGetter("selectDiscoveries")
         fun anotherGetSelectDiscoveries(): Any? {
@@ -60,6 +131,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectDiscoveryRule: ArrayList<String>? = null
+        fun addSelectDiscoveryRule(id: String) {
+            selectDiscoveryRule = ZbxListUtils.add(selectDiscoveryRule, id)
+        }
 
         @JsonGetter("selectDiscoveryRule")
         fun anotherGetSelectDiscoveryRule(): Any? {
@@ -74,6 +148,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectGraphs: ArrayList<String>? = null
+        fun addSelectGraphs(id: String) {
+            selectGraphs = ZbxListUtils.add(selectGraphs, id)
+        }
 
         @JsonGetter("selectGraphs")
         fun anotherGetSelectGraphs(): Any? {
@@ -88,6 +165,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectHostDiscovery: ArrayList<String>? = null
+        fun addSelectHostDiscovery(id: String) {
+            selectHostDiscovery = ZbxListUtils.add(selectHostDiscovery, id)
+        }
 
         @JsonGetter("selectHostDiscovery")
         fun anotherGetSelectHostDiscovery(): Any? {
@@ -102,6 +182,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectHttpTests: ArrayList<String>? = null
+        fun addSelectHttpTests(id: String) {
+            selectHttpTests = ZbxListUtils.add(selectHttpTests, id)
+        }
 
         @JsonGetter("selectHttpTests")
         fun anotherGetSelectHttpTests(): Any? {
@@ -116,6 +199,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectInterfaces: ArrayList<String>? = null
+        fun addSelectInterfaces(id: String) {
+            selectInterfaces = ZbxListUtils.add(selectInterfaces, id)
+        }
 
         @JsonGetter("selectInterfaces")
         fun anotherGetSelectInterfaces(): Any? {
@@ -130,6 +216,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectInventory: ArrayList<String>? = null
+        fun addSelectInventory(id: String) {
+            selectInventory = ZbxListUtils.add(selectInventory, id)
+        }
 
         @JsonGetter("selectInventory")
         fun anotherGetSelectInventory(): Any? {
@@ -144,6 +233,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectItems: ArrayList<String>? = null
+        fun addSelectItems(id: String) {
+            selectItems = ZbxListUtils.add(selectItems, id)
+        }
 
         @JsonGetter("selectItems")
         fun anotherGetSelectItems(): Any? {
@@ -158,6 +250,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectMacros: ArrayList<String>? = null
+        fun addSelectMacros(id: String) {
+            selectMacros = ZbxListUtils.add(selectMacros, id)
+        }
 
         @JsonGetter("selectMacros")
         fun anotherGetSelectMacros(): Any? {
@@ -172,6 +267,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectParentTemplates: ArrayList<String>? = null
+        fun addSelectParentTemplates(id: String) {
+            selectParentTemplates = ZbxListUtils.add(selectParentTemplates, id)
+        }
 
         @JsonGetter("selectParentTemplates")
         fun anotherGetSelectParentTemplates(): Any? {
@@ -186,6 +284,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectScreens: ArrayList<String>? = null
+        fun addSelectScreens(id: String) {
+            selectScreens = ZbxListUtils.add(selectScreens, id)
+        }
 
         @JsonGetter("selectScreens")
         fun anotherGetSelectScreens(): Any? {
@@ -200,6 +301,9 @@ class RequestHost : ZabbixApiRequest() {
         }
 
         var selectTriggers: ArrayList<String>? = null
+        fun addSelectTriggers(id: String) {
+            selectTriggers = ZbxListUtils.add(selectTriggers, id)
+        }
 
         @JsonGetter("selectTriggers")
         fun anotherGetSelectTriggers(): Any? {
@@ -213,17 +317,6 @@ class RequestHost : ZabbixApiRequest() {
             } ?: return null
         }
 
-        fun addApplicationId(id: Int) {
-            applicationids = ZbxListUtils.add(applicationids, id)
-        }
-
-        fun addDserviceId(id: Int) {
-            dserviceids = ZbxListUtils.add(dserviceids, id)
-        }
-
-        fun addGraphId(id: Int) {
-            graphids = ZbxListUtils.add(graphids, id)
-        }
 
     }
 
