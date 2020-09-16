@@ -160,41 +160,41 @@ class RequestItem : ZabbixApiRequest() {
 
         var limitSelects: Int? = null
 
-        fun addItemId(id: String?) {
-            itemids = ZbxListUtils.add(itemids, id)
+        fun addItemId(item: String?) {
+            itemids = ZbxListUtils.add(itemids, item)
         }
 
-        fun addGroupId(id: String?) {
-            groupids = ZbxListUtils.add(groupids, id)
+        fun addGroupId(item: String?) {
+            groupids = ZbxListUtils.add(groupids, item)
         }
 
 
-        fun addTemplateId(id: String?) {
-            templateids = ZbxListUtils.add(templateids, id)
+        fun addTemplateId(item: String?) {
+            templateids = ZbxListUtils.add(templateids, item)
         }
 
-        fun addHostId(id: String?) {
-            hostids = ZbxListUtils.add(hostids, id)
+        fun addHostId(item: String?) {
+            hostids = ZbxListUtils.add(hostids, item)
         }
 
-        fun addProxyId(id: String?) {
-            proxyids = ZbxListUtils.add(proxyids, id)
+        fun addProxyId(item: String?) {
+            proxyids = ZbxListUtils.add(proxyids, item)
         }
 
-        fun addInterfaceId(id: String?) {
-            interfaceids = ZbxListUtils.add(interfaceids, id)
+        fun addInterfaceId(item: String?) {
+            interfaceids = ZbxListUtils.add(interfaceids, item)
         }
 
-        fun addGraphId(id: String?) {
-            graphids = ZbxListUtils.add(graphids, id)
+        fun addGraphId(item: String?) {
+            graphids = ZbxListUtils.add(graphids, item)
         }
 
-        fun addTriggerId(id: String?) {
-            triggerids = ZbxListUtils.add(triggerids, id)
+        fun addTriggerId(item: String?) {
+            triggerids = ZbxListUtils.add(triggerids, item)
         }
 
-        fun addApplicationId(id: String?) {
-            applicationids = ZbxListUtils.add(applicationids, id)
+        fun addApplicationId(item: String?) {
+            applicationids = ZbxListUtils.add(applicationids, item)
         }
 
     }

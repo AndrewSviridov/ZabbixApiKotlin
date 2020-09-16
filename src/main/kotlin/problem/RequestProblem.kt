@@ -1,13 +1,15 @@
-package Event
+package problem
 
 import AnotherStaff.Tag
 import Api.GetRequestCommonParams
 import Api.ZabbixApiRequest
+import Api.ZbxListUtils
 import com.fasterxml.jackson.annotation.JsonGetter
 import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-class RequestEvent : ZabbixApiRequest() {
+class RequestProblem : ZabbixApiRequest() {
     val params = Params()
 
     class Params : GetRequestCommonParams() {
@@ -17,65 +19,28 @@ class RequestEvent : ZabbixApiRequest() {
         var objectids: ArrayList<String?>? = null
         var applicationids: ArrayList<String?>? = null
         var source: Int? = null
-        var `object`: Int? = null
+
+        @JsonProperty("object")
+        var objectType: Int? = null
         var acknowledged: Boolean? = null
         var suppressed: Boolean? = null
         var severities: ArrayList<Int?>? = null
         var evaltype: Int? = null
         var tags: ArrayList<Tag>? = null
+        var recent: Boolean? = null
         var eventid_from: String? = null
         var eventid_till: String? = null
         var time_from: Long? = null
         var time_till: Long? = null
+        var selectAcknowledges: ArrayList<String>? = null
 
-        var value: ArrayList<Int?>? = null
-        var selectHosts: ArrayList<String?>? = null
-
-        @JsonGetter("selectHosts")
-        fun anotherGetSelectHosts(): Any? {
-            selectHosts?.let {
-                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
-
-                    return it[0]
-                } else {
-                    return it
-                }
-            } ?: return null
+        fun addSelectAcknowledges(item: String) {
+            selectAcknowledges = ZbxListUtils.add(selectAcknowledges, item)
         }
 
-        var selectRelatedObject: ArrayList<String?>? = null
-
-        @JsonGetter("selectRelatedObject")
-        fun anotherGetSelectRelatedObject(): Any? {
-            selectRelatedObject?.let {
-                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
-
-                    return it[0]
-                } else {
-                    return it
-                }
-            } ?: return null
-        }
-
-        var select_alerts: ArrayList<String?>? = null
-
-        @JsonGetter("select_alerts")
-        fun anotherGetSelect_alerts(): Any? {
-            select_alerts?.let {
-                if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
-
-                    return it[0]
-                } else {
-                    return it
-                }
-            } ?: return null
-        }
-
-        var select_acknowledges: ArrayList<String?>? = null
-
-        @JsonGetter("select_acknowledges")
-        fun anotherGetSelect_acknowledges(): Any? {
-            select_acknowledges?.let {
+        @JsonGetter("selectAcknowledges")
+        fun anotherSelectAcknowledges(): Any? {
+            selectAcknowledges?.let {
                 if (it.size == 1 && (it[0] == "extend" || it[0] == "count")) {
 
                     return it[0]
@@ -86,6 +51,10 @@ class RequestEvent : ZabbixApiRequest() {
         }
 
         var selectTags: ArrayList<String?>? = null
+
+        fun addSelectTags(item: String) {
+            selectTags = ZbxListUtils.add(selectTags, item)
+        }
 
         @JsonGetter("selectTags")
         fun anotherGetSelectTags(): Any? {
@@ -100,6 +69,10 @@ class RequestEvent : ZabbixApiRequest() {
         }
 
         var selectSuppressionData: ArrayList<String?>? = null
+
+        fun addSelectSuppressionData(item: String) {
+            selectSuppressionData = ZbxListUtils.add(selectSuppressionData, item)
+        }
 
         @JsonGetter("selectSuppressionData")
         fun anotherGetSelectSuppressionData(): Any? {

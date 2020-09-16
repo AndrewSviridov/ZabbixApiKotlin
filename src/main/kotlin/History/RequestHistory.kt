@@ -20,12 +20,12 @@ class RequestHistory : ZabbixApiRequest() {
         var time_till: Long? = null
 
 
-        fun addHostId(id: String) {
-            hostids = ZbxListUtils.add(hostids, id)
+        fun addHostId(item: String) {
+            hostids = ZbxListUtils.add(hostids, item)
         }
 
-        fun addItemId(id: String) {
-            itemids = ZbxListUtils.add(hostids, id)
+        fun addItemId(item: String) {
+            itemids = ZbxListUtils.add(hostids, item)
         }
 
 

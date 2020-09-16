@@ -14,6 +14,9 @@ import Item.RequestItem
 import Item.ResponseItem
 import User.User
 import org.slf4j.LoggerFactory
+import problem.Problem
+import problem.RequestProblem
+import problem.ResponseProblem
 
 class ZabbixApi(private var apiUrl: String, login: String, password: String) {
 
@@ -69,6 +72,18 @@ class ZabbixApi(private var apiUrl: String, login: String, password: String) {
         val resp: ResponseHost
         try {
             resp = host().get(requestHost)
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        return resp.result
+    }
+
+    @Throws(ZabbixApiException::class)
+    fun getProblems(): MutableList<ResponseProblem.Result> {
+        val requestProblem = RequestProblem()
+        val resp: ResponseProblem
+        try {
+            resp = problem().get(requestProblem)
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)
         }
@@ -148,5 +163,8 @@ class ZabbixApi(private var apiUrl: String, login: String, password: String) {
         return user
     }
 
+    fun problem(): Problem {
+        return Problem(user)
+    }
 
 }

@@ -22,7 +22,7 @@ object Service {
     fun main(args: Array<String>) {
         val properties = PropertiesClassK()
 
-        val zabbixApi = DefaultZabbixApi(properties.url)
+        val zabbixApi = DefaultZabbixApi("http://192.168.1.13/zabbix/api_jsonrpc.php")
         zabbixApi.init()
 /*
         println("logout")
@@ -32,7 +32,12 @@ object Service {
         val getResponse22: JSONObject = zabbixApi.call(getRequestLogOut2)
         println(getResponse22)
 */
-        val login: Boolean = zabbixApi.login(properties.user, properties.password)
+        /*
+        * http://192.168.1.13/zabbix/
+sviridov
+1q2w3e
+        * */
+        val login: Boolean = zabbixApi.login("sviridov", "1q2w3e")
         println("login:$login")
 
         val arr2 = JSONArray()
@@ -42,10 +47,10 @@ object Service {
         arrFields[0] = "extend"
         println("------------------- host.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
-            .method("host.get")//.paramEntry("output", "extend")
-            .paramEntry("selectHttpTests", "extend")
+            .method("host.get").paramEntry("output", "extend")
+            //.paramEntry("selectHttpTests", "extend")
             // .paramEntry("selectHttpTests","extend")
-            .paramEntry("hostids", "10084")
+            // .paramEntry("hostids", "10084")
             .build()
         val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)
         println(org.json.JSONObject(getRequestHost.toString()).toString(2))
