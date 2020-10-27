@@ -39,6 +39,7 @@ object myServise3 {
         //requestHost.params.output?.add("host")
         //requestHost.params.addOutput("host")
         //requestHost.params.addOutputField("host")
+        val resp = zabbixApi.getProblems()
         requestHost.params.addHostids("10084")
         requestHost.params.addSelectApplications("extend")
         requestHost.params.addSelectGraphs("extend")

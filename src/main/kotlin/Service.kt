@@ -22,7 +22,8 @@ object Service {
     fun main(args: Array<String>) {
         val properties = PropertiesClassK()
 
-        val zabbixApi = DefaultZabbixApi("http://192.168.1.13/zabbix/api_jsonrpc.php")
+        // val zabbixApi = DefaultZabbixApi("http://192.168.1.13/zabbix/api_jsonrpc.php")
+        val zabbixApi = DefaultZabbixApi("http://192.168.99.100/api_jsonrpc.php")
         zabbixApi.init()
 /*
         println("logout")
@@ -37,24 +38,55 @@ object Service {
 sviridov
 1q2w3e
         * */
-        val login: Boolean = zabbixApi.login("sviridov", "1q2w3e")
+/*
+        curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{\"jsonrpc\":\"2.0\",\"method\":\"apiinfo.version\",\"id\":1,\"auth\":null,\"params\":{}}' http://192.168.1.13/zabbix/api_jsonrpc.php
+        curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{\"jsonrpc\":\"2.0\",\"method\":\"user.login\",\"id\":1,\"auth\":null,\"params\":{\"user\":\"youlogin\",\"password\":\"youpassword\"}}' http://192.168.1.13/zabbix/api_jsonrpc.php
+        curl -s -X POST -H 'Content-Type: application/json-rpc' -d '{\"jsonrpc\":\"2.0\",\"method\":\"get.problem\",\"id\":1,\"auth\":\"b7a76fd4499d7df94bddb562f5ae2c49\",\"params\":{}}' http://192.168.1.13/zabbix/api_jsonrpc.php
+*/
+        // val login: Boolean = zabbixApi.login("sviridov", "1q2w3e")
+        val login: Boolean = zabbixApi.login("admin", "zabbix")
         println("login:$login")
 
+        println("----------------------------------")
+
+
         val arr2 = JSONArray()
-        arr2[0] = "10084"
-        //arr2[1] = "10333"
+        arr2[0] = "hostids"
+        arr2[1] = "groupids"
         val arrFields = JSONArray()
         arrFields[0] = "extend"
-        println("------------------- host.get -------------------------")
+        println("------------------- problem.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
-            .method("host.get").paramEntry("output", "extend")
+            .method("problem.get").paramEntry("output", "eventid")
             //.paramEntry("selectHttpTests", "extend")
             // .paramEntry("selectHttpTests","extend")
-            // .paramEntry("hostids", "10084")
+            // .paramEntry("hostids", "10111")
             .build()
         val getResponseHost: JSONObject = zabbixApi.call(getRequestHost)
         println(org.json.JSONObject(getRequestHost.toString()).toString(2))
         println(org.json.JSONObject(getResponseHost.toString()).toString(2))
+
+        println("------------------- event.get -------------------------")
+        val arr3 = JSONArray()
+        arr3[0] = "hosts"
+        val arrInt = JSONArray()
+        arrInt[0] = 1
+        val getRequestEvent: Request = RequestBuilder.newBuilder()
+            .method("event.get")
+            .paramEntry("eventids", "172")
+            .paramEntry("selectHosts", "extend")
+
+            //.paramEntry("selectHttpTests", "10084")
+            // .paramEntry("selectHttpTests","extend")
+            // .paramEntry("hostids", "10111")
+            .paramEntry("value", arrInt)
+            .paramEntry("output", "hosts")
+            //
+            .build()
+        val getResponseEvent: JSONObject = zabbixApi.call(getRequestEvent)
+        println(org.json.JSONObject(getRequestEvent.toString()).toString(2))
+        println(org.json.JSONObject(getResponseEvent.toString()).toString(2))
+
 /*
 /*
         val host = "Zabbix server"
