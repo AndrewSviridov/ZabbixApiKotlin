@@ -103,7 +103,8 @@ class ZabbixApi(private var apiUrl: String, login: String, password: String) {
             val requestEvent = RequestEvent()
             requestEvent.params.eventids = arrayListOf(eventid)
             requestEvent.params.selectHosts = arrayListOf("extend")
-            requestEvent.params.value = arrayListOf(1)
+            // requestEvent.params.value = arrayListOf(1)
+            //  requestEvent.params.output=
             resp = event().get(requestEvent)
         } catch (e: ZabbixApiException) {
             throw ZabbixApiException(e)

@@ -79,8 +79,8 @@ sviridov
             //.paramEntry("selectHttpTests", "10084")
             // .paramEntry("selectHttpTests","extend")
             // .paramEntry("hostids", "10111")
-            .paramEntry("value", arrInt)
-            .paramEntry("output", "hosts")
+            // .paramEntry("value", arrInt)
+            // .paramEntry("output", "hosts")
             //
             .build()
         val getResponseEvent: JSONObject = zabbixApi.call(getRequestEvent)

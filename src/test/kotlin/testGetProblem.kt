@@ -23,6 +23,7 @@ class testGetProblem {
 
             val event = zabbixApi.event()
 
+            //https://stackoverflow.com/questions/58095276/how-can-i-retrieve-problem-and-host-name-using-zabbix-api
             val requestEvent = RequestEvent()
             requestEvent.params.eventids = arrayListOf(resp[0].eventid!!)
             requestEvent.params.selectHosts = arrayListOf("extend")

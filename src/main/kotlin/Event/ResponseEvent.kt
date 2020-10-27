@@ -10,7 +10,7 @@ class ResponseEvent : ZabbixApiResponse() {
 
     class Result : EventObject() {
         //---------------
-        val hosts: ArrayList<ResponseHost.Result?>? = null
+        val hosts: ArrayList<ResponseHost.Result>? = null
     }
 
 }
