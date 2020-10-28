@@ -19,6 +19,9 @@ class testGetProblem {
 
  */
         // нужно получить eventid нужной проблемы, например 172
+
+        var result1 = zabbixApi.getProblemsHosts()
+
         if (resp.size != 0) {
 
             val event = zabbixApi.event()

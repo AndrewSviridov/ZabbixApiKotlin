@@ -57,7 +57,7 @@ sviridov
         arrFields[0] = "extend"
         println("------------------- problem.get -------------------------")
         val getRequestHost: Request = RequestBuilder.newBuilder()
-            .method("problem.get").paramEntry("output", "eventid")
+            .method("problem.get").paramEntry("output", "count")
             //.paramEntry("selectHttpTests", "extend")
             // .paramEntry("selectHttpTests","extend")
             // .paramEntry("hostids", "10111")
@@ -71,16 +71,21 @@ sviridov
         arr3[0] = "hosts"
         val arrInt = JSONArray()
         arrInt[0] = 1
+        //172,169,171,167
+        val arrEventId = JSONArray()
+        arrEventId[0] = "172"
+        arrEventId[1] = "171"
+        arrEventId[2] = "167"
         val getRequestEvent: Request = RequestBuilder.newBuilder()
             .method("event.get")
-            .paramEntry("eventids", "172")
+            .paramEntry("eventids", arrEventId)
             .paramEntry("selectHosts", "extend")
 
             //.paramEntry("selectHttpTests", "10084")
             // .paramEntry("selectHttpTests","extend")
             // .paramEntry("hostids", "10111")
             // .paramEntry("value", arrInt)
-            // .paramEntry("output", "hosts")
+            .paramEntry("output", "hosts")
             //
             .build()
         val getResponseEvent: JSONObject = zabbixApi.call(getRequestEvent)

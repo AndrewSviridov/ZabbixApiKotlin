@@ -112,6 +112,45 @@ class ZabbixApi(private var apiUrl: String, login: String, password: String) {
         return resp.result
     }
 
+    @Throws(ZabbixApiException::class)
+    fun getProblemsHosts(): MutableList<ResponseProblem.Result> {
+
+        var resp: ResponseProblem
+        try {
+            val requestProblem = RequestProblem()
+            resp = problem().get(requestProblem)
+            if (resp.result.size != 0) {
+                val arrayEventId = arrayListOf<String>()
+                resp.result.forEach {
+                    //todo наверное eventid тужно не null сделать или как то решить чтобы не оборачивать
+                    it.eventid?.let { arrayEventId.add(it) } ?: throw ZabbixApiException("eventid null")
+                }
+
+                val requestEvent = RequestEvent()
+                requestEvent.params.eventids = arrayEventId
+                requestEvent.params.selectHosts = arrayListOf("extend")
+                // requestEvent.params.value = arrayListOf(1)
+                requestEvent.params.output = arrayListOf("hosts")
+                val respEvent = event().get(requestEvent)
+                respEvent.result.forEach { event ->
+                    resp.result.forEach { problem ->
+                        //вроде не должны быть null eventid
+                        if (event.eventid.equals(problem.eventid)) {
+                            problem.hosts = event.hosts
+                        }
+                    }
+                }
+
+            } else {
+                resp = ResponseProblem()
+            }
+
+        } catch (e: ZabbixApiException) {
+            throw ZabbixApiException(e)
+        }
+        return resp.result
+    }
+
 
     @Throws(ZabbixApiException::class)
     fun getEventsForPeriod(hostid: String, time_from: Long, time_till: Long): MutableList<ResponseEvent.Result> {
